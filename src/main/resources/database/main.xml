@@ -1,0 +1,14 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <!-- CREATE TABLES -->
+    <include file = "database/202310121249_create_user_table.xml" relativeToChangelogFile="false"/>
+    <include file = "database/202310121904_create_ticket_table.xml" relativeToChangelogFile="false"/>
+    <include file = "database/202310121922_create_destination_table.xml" relativeToChangelogFile="false"/>
+    <include file = "database/202310121926_create_mapping_table_ticket_destination.xml" relativeToChangelogFile="false"/>
+    <!--END HERE-->
+
+</databaseChangeLog>

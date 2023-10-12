@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <!--CREATE DESTINATION TABLE-->
+    <changeSet author="dsimeonova" id="destination_table_id">
+        <createTable tableName="ticket_destination">
+
+            <!--TABLE FIELDS-->
+            <column name="ticket_id" type = "bigint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="destination_id" type = "bigint">
+                <constraints nullable="false"/>
+            </column>
+            <!-- END HERE -->
+        </createTable>
+    </changeSet>
+    <!-- END HERE -->
+
+    <!-- CREATE FOREIGN KEYS - TICKET -->
+    <changeSet id="added_fk_user_to_thicket_table" author="dsimeonova">
+        <addForeignKeyConstraint baseTableName="ticket_destination"
+                                 baseColumnNames="ticket_id"
+                                 constraintName="fk_ticket_destination_ticket_id"
+                                 referencedTableName="ticket" referencedColumnNames="id"/>
+    </changeSet>
+    <!-- END HERE -->
+
+    <!-- CREATE FOREIGN KEYS - DESTINATION -->
+    <changeSet id="added_fk_user_to_thicket_table" author="dsimeonova">
+        <addForeignKeyConstraint baseTableName="ticket_destination"
+                                 baseColumnNames="destination_id"
+                                 constraintName="fk_ticket_destination_destination_id"
+                                 referencedTableName="destination" referencedColumnNames="id"/>
+    </changeSet>
+    <!-- END HERE -->
+
+
+</databaseChangeLog>

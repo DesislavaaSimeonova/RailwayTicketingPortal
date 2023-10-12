@@ -1,0 +1,33 @@
+spring:
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:file:./myh2db
+    username: sa
+    password: as
+    driverClassName: org.h2.Driver
+      # Optional: Data Initialization
+#    schema: classpath:db/schema.sql
+#    data: classpath:db/data.sql
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true #allows to use liquibase
+  liquibase:
+    change-log: classpath:./database/main.xml
+
+
+logging:
+  level:
+    ROOT: INFO
+
+
+global:
+  exception-handling:
+    debug-message: TRUE
+
+info:
+  application:
+     name: Railway Ticketing Portal
+     version: 1.0.0
+     description: Software Project for university course 'Software Testing', implemented by Desislava Simeonova
