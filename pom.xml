@@ -47,6 +47,20 @@
 <!--		</dependency>-->
 
 		<!--CUSTOM DEPENDENCIES-->
+
+		<!-- liquibase needed-->
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+		</dependency>
+
+		<!-- MAPPER needed-->
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>1.4.2.Final</version>
+		</dependency>
+
 		<!-- lombok needed-->
 		<dependency>
 			<groupId>com.google.firebase</groupId>

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -24,12 +23,10 @@ public class Ticket {
     private String type;
 
     @Column
-    @ManyToMany
-    @JoinTable(
-            name = "ticket_destination",
-            joinColumns = @JoinColumn(name = "ticket_id"),
-            inverseJoinColumns = @JoinColumn(name = "start_destination)id"))
-    private Set<Destination> destinations; //owner
+    private String startDestination;
+
+    @Column
+    private String endDestination;
 
     @Column
     private LocalDateTime departureTime;

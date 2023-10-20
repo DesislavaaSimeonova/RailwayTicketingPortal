@@ -18,6 +18,8 @@
             <column name="type" type="varchar(255)"/>
             <column name="password" type="varchar(255)"/>
             <column name="departure_time" type="timestamp"/>
+            <column name="start_destination" type="varchar(255)"/>
+            <column name="end_destination" type="varchar(255)"/>
             <!-- END HERE -->
 
             <!--FOREIGN KEYS-->

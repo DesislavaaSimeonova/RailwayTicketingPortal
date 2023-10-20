@@ -12,7 +12,7 @@ spring:
 #    data: classpath:db/data.sql
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
-    defer-datasource-initialization: true #allows to use liquibase
+    #defer-datasource-initialization: true #allows to use liquibase
   liquibase:
     change-log: classpath:./database/main.xml
 

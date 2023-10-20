@@ -35,7 +35,7 @@ public class User {
     @Column
     private Long years;
 
-    @OneToMany(mappedBy = "userId", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "userId")
     List<Ticket> tickets;
 
 }
