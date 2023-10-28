@@ -15,7 +15,7 @@ public class TicketDTO {
 
     private Long id;
 
-    private String type; //bookTicket
+    private String type;
 
     private String startDestination;
 
