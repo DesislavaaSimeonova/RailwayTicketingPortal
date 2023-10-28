@@ -18,4 +18,10 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<Ticket> findAllByStartDestinationAndDepartureTime(String startDestination, LocalTime departureTime);
 
     List<Ticket> findAllByEndDestinationAndDepartureTime(String endDestination, LocalTime departureTime);
+
+    List<Ticket> findAllByStartDestination(String startDestination);
+
+    List<Ticket> findAllByEndDestination(String endDestination);
+
+    List<Ticket> findAllByDepartureTime(LocalTime departureTime);
 }

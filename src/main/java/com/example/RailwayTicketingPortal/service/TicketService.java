@@ -6,30 +6,25 @@ import com.example.RailwayTicketingPortal.service.dto.TicketDTO;
 import com.example.RailwayTicketingPortal.service.mapper.TicketMapper;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpServerErrorException;
 
-import java.time.LocalDateTime;
+
 import java.time.LocalTime;
-import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @Transactional
+@AllArgsConstructor
 public class TicketService {
 
-    @Autowired
-    private TicketMapper ticketMapper;
+    private final TicketMapper ticketMapper;
 
-    @Autowired
-    private TicketRepository ticketRepository;
+    private final TicketRepository ticketRepository;
 
     public TicketDTO create(TicketDTO ticketDTO) {
 
@@ -65,23 +60,6 @@ public class TicketService {
         }
         throw new HttpServerErrorException(HttpStatus.NO_CONTENT);
     }
-
-    public List<Ticket> getByCriteria(String startDestination, String endDestination, LocalTime departureTime) {
-       if(startDestination != null && endDestination != null && departureTime !=null){
-           return ticketRepository.findAllByStartDestinationAndEndDestinationAndDepartureTime(startDestination,endDestination,departureTime);
-       }
-       else if(startDestination != null && endDestination != null){
-           return ticketRepository.findAllByStartDestinationAndEndDestination(startDestination,endDestination);
-       }
-       else if(startDestination != null && departureTime != null){
-           return ticketRepository.findAllByStartDestinationAndDepartureTime(startDestination,departureTime);
-       }
-       else if(endDestination !=null && departureTime != null){
-           return  ticketRepository.findAllByEndDestinationAndDepartureTime(endDestination,departureTime);
-       }
-       return new ArrayList<>();
-    }
-
     public List<Ticket> getAll() {
         List<Ticket> tickets = ticketRepository.findAll();
         return tickets;
@@ -92,5 +70,8 @@ public class TicketService {
             ticketRepository.deleteById(id);
         }
         else throw new HttpServerErrorException(HttpStatus.EXPECTATION_FAILED);
+    }
+    public LocalTime parseStringToLocalTime(String departureTime){
+        return LocalTime.parse(departureTime);
     }
 }

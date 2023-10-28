@@ -3,25 +3,25 @@ package com.example.RailwayTicketingPortal.web.rest;
 import com.example.RailwayTicketingPortal.domain.Ticket;
 import com.example.RailwayTicketingPortal.service.TicketService;
 import com.example.RailwayTicketingPortal.service.custom.CalculationService;
+import com.example.RailwayTicketingPortal.service.custom.TicketQueryService;
 import com.example.RailwayTicketingPortal.service.dto.TicketDTO;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api")
 public class TicketController {
 
-    @Autowired
-    private TicketService ticketService;
+    private final TicketService ticketService;
 
-    @Autowired
-    private CalculationService calculationService;
+    private final TicketQueryService ticketQueryService;
+
+    private final CalculationService calculationService;
 
     @PostMapping("/ticket")
     public ResponseEntity<TicketDTO> createTicket(@RequestBody TicketDTO ticketDTO){
@@ -44,8 +44,9 @@ public class TicketController {
     @GetMapping("/ticket/search")
     public List<Ticket> getTicketById(@RequestParam(required = false) String startDestination,
                                       @RequestParam(required = false)String endDestination,
-                                      @RequestParam(required = false) LocalTime departureTime) {
-        return ticketService.getByCriteria(startDestination,endDestination,departureTime);
+                                      @RequestParam(required = false) String departureTime) {
+        LocalTime convertedTime = ticketService.parseStringToLocalTime(departureTime);
+        return ticketQueryService.getByCriteria(startDestination,endDestination,convertedTime);
     }
 
     @GetMapping("/tickets")

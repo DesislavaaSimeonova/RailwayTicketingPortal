@@ -4,6 +4,7 @@ import com.example.RailwayTicketingPortal.domain.User;
 import com.example.RailwayTicketingPortal.repository.UserRepository;
 import com.example.RailwayTicketingPortal.service.dto.UserDTO;
 import com.example.RailwayTicketingPortal.service.mapper.UserMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -15,12 +16,11 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@AllArgsConstructor
 public class UserService {
 
-    @Autowired
-    private UserMapper userMapper;
-    @Autowired
-    private UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final UserRepository userRepository;
 
     public UserDTO create(UserDTO userDTO) {
 
