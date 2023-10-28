@@ -6,7 +6,6 @@ import com.example.RailwayTicketingPortal.service.dto.TicketDTO;
 import com.example.RailwayTicketingPortal.service.dto.UserDTO;
 import com.example.RailwayTicketingPortal.service.mapper.UserMapper;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
