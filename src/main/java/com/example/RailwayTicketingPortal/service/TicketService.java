@@ -1,11 +1,17 @@
 package com.example.RailwayTicketingPortal.service;
 
 import com.example.RailwayTicketingPortal.domain.Ticket;
+import com.example.RailwayTicketingPortal.domain.User;
 import com.example.RailwayTicketingPortal.repository.TicketRepository;
+import com.example.RailwayTicketingPortal.repository.UserRepository;
+import com.example.RailwayTicketingPortal.service.custom.ValidationService;
 import com.example.RailwayTicketingPortal.service.dto.TicketDTO;
+import com.example.RailwayTicketingPortal.service.dto.UserDTO;
 import com.example.RailwayTicketingPortal.service.mapper.TicketMapper;
 
+import com.example.RailwayTicketingPortal.service.mapper.UserMapper;
 import lombok.AllArgsConstructor;
+import org.mapstruct.control.MappingControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,8 +31,12 @@ public class TicketService {
 
     private final TicketRepository ticketRepository;
 
-    public TicketDTO create(TicketDTO ticketDTO) {
+    private final ValidationService validationService;
 
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
+
+    public TicketDTO create(TicketDTO ticketDTO) {
         if(ticketDTO == null){
             throw new HttpServerErrorException(HttpStatus.NO_CONTENT);
         }
@@ -39,7 +49,6 @@ public class TicketService {
     }
 
     public TicketDTO update(TicketDTO ticketDTO, Long id) {
-
         if(ticketDTO != null && id != null){
             Ticket currentticket =getById(id);
 
@@ -72,5 +81,21 @@ public class TicketService {
     }
     public LocalTime parseStringToLocalTime(String departureTime){
         return LocalTime.parse(departureTime);
+    }
+
+    public List<TicketDTO> bookTickets(List<TicketDTO> tickets, Long userId) throws Exception{
+        validationService.validateUser(userId);
+        Optional<User> optionalUser = userRepository.findById(userId);
+        UserDTO userDTO = new UserDTO();
+        if(optionalUser.isPresent()){
+            userDTO = userMapper.toDTO(optionalUser.get());
+        }
+        for (TicketDTO ticketDTO: tickets) {
+            ticketDTO.setUserId(userId);
+            userDTO.getTickets().add(ticketMapper.toEntity(ticketDTO));
+            userRepository.save(userMapper.toEntity(userDTO));
+            ticketRepository.save(ticketMapper.toEntity(ticketDTO));
+        }
+        return tickets;
     }
 }

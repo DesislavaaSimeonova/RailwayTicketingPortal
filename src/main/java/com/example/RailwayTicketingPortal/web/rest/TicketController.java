@@ -24,7 +24,7 @@ public class TicketController {
     private final CalculationService calculationService;
 
     @PostMapping("/ticket")
-    public ResponseEntity<TicketDTO> createTicket(@RequestBody TicketDTO ticketDTO){
+    public ResponseEntity<TicketDTO> createTicket(@RequestBody TicketDTO ticketDTO) {
         TicketDTO createdTicket = ticketService.create(ticketDTO);
 
         return ResponseEntity.ok().body(createdTicket);
@@ -43,10 +43,10 @@ public class TicketController {
 
     @GetMapping("/ticket/search")
     public List<Ticket> getTicketById(@RequestParam(required = false) String startDestination,
-                                      @RequestParam(required = false)String endDestination,
+                                      @RequestParam(required = false) String endDestination,
                                       @RequestParam(required = false) String departureTime) {
         LocalTime convertedTime = ticketService.parseStringToLocalTime(departureTime);
-        return ticketQueryService.getByCriteria(startDestination,endDestination,convertedTime);
+        return ticketQueryService.getByCriteria(startDestination, endDestination, convertedTime);
     }
 
     @GetMapping("/tickets")
@@ -58,6 +58,12 @@ public class TicketController {
     public ResponseEntity<Void> deleteTicket(@RequestParam Long ticketId) {
         ticketService.delete(ticketId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/book/tickets/{userId}")
+    public List<TicketDTO>  createTicket(List<TicketDTO> tickets, @RequestParam Long userId) throws Exception{
+        List<TicketDTO> bookedTickets = ticketService.bookTickets(tickets,userId);
+        return bookedTickets;
     }
 
 }
