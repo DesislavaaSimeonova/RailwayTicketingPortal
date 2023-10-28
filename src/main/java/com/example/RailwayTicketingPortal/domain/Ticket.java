@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -29,7 +30,7 @@ public class Ticket {
     private String endDestination;
 
     @Column
-    private LocalDateTime departureTime;
+    private LocalTime departureTime;
 
     private Long userId;
 

@@ -4,6 +4,7 @@ import com.example.RailwayTicketingPortal.domain.User;
 import com.example.RailwayTicketingPortal.repository.UserRepository;
 import com.example.RailwayTicketingPortal.service.dto.UserDTO;
 import com.example.RailwayTicketingPortal.service.mapper.UserMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,14 +17,10 @@ import java.util.Optional;
 @Transactional
 public class UserService {
 
-    private final UserMapper userMapper;
-
-    private final UserRepository userRepository;
-
-    public UserService(UserMapper userMapper, UserRepository userRepository) {
-        this.userMapper = userMapper;
-        this.userRepository = userRepository;
-    }
+    @Autowired
+    private UserMapper userMapper;
+    @Autowired
+    private UserRepository userRepository;
 
     public UserDTO create(UserDTO userDTO) {
 

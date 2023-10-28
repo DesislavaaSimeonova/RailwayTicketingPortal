@@ -15,7 +15,7 @@ public class TicketDTO {
 
     private Long id;
 
-    private String type; //under 16 years
+    private String type; //bookTicket
 
     private String startDestination;
 

@@ -4,32 +4,33 @@ import com.example.RailwayTicketingPortal.domain.Ticket;
 import com.example.RailwayTicketingPortal.service.TicketService;
 import com.example.RailwayTicketingPortal.service.custom.CalculationService;
 import com.example.RailwayTicketingPortal.service.dto.TicketDTO;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
 public class TicketController {
 
-    private final TicketService ticketService;
+    @Autowired
+    private TicketService ticketService;
 
-    private final CalculationService calculationService;
-
-    public TicketController(TicketService ticketService, CalculationService calculationService) {
-        this.ticketService = ticketService;
-        this.calculationService = calculationService;
-    }
+    @Autowired
+    private CalculationService calculationService;
 
     @PostMapping("/ticket")
-    public ResponseEntity<TicketDTO> createTicket(@RequestBody TicketDTO ticketDTO) throws Exception {
+    public ResponseEntity<TicketDTO> createTicket(@RequestBody TicketDTO ticketDTO){
         TicketDTO createdTicket = ticketService.create(ticketDTO);
 
         return ResponseEntity.ok().body(createdTicket);
     }
 
-    @GetMapping("/tickets")
+    @GetMapping("/tickets/price")
     public ResponseEntity<Double> calculateTicket(@RequestBody List<TicketDTO> tickets) throws Exception {
         Double price = calculationService.calculatePrice(tickets);
         return ResponseEntity.ok().body(price);
@@ -38,6 +39,13 @@ public class TicketController {
     @GetMapping("/ticket/{ticketId}")
     public Ticket getTicketById(@RequestParam Long ticketId) {
         return ticketService.getById(ticketId);
+    }
+
+    @GetMapping("/ticket/search")
+    public List<Ticket> getTicketById(@RequestParam(required = false) String startDestination,
+                                      @RequestParam(required = false)String endDestination,
+                                      @RequestParam(required = false) LocalTime departureTime) {
+        return ticketService.getByCriteria(startDestination,endDestination,departureTime);
     }
 
     @GetMapping("/tickets")

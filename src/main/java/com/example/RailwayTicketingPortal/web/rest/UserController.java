@@ -3,6 +3,7 @@ package com.example.RailwayTicketingPortal.web.rest;
 import com.example.RailwayTicketingPortal.domain.User;
 import com.example.RailwayTicketingPortal.service.UserService;
 import com.example.RailwayTicketingPortal.service.dto.UserDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,11 +13,8 @@ import java.util.List;
 @RequestMapping("/api")
 public class UserController{
 
-    private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    @Autowired
+    private UserService userService;
 
 
     @PostMapping("/user")

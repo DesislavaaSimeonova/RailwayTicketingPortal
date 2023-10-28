@@ -5,18 +5,22 @@ import com.example.RailwayTicketingPortal.repository.UserRepository;
 import com.example.RailwayTicketingPortal.service.dto.TicketDTO;
 import com.example.RailwayTicketingPortal.service.dto.UserDTO;
 import com.example.RailwayTicketingPortal.service.mapper.UserMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
+@Service
+@Transactional
 public class CalculationService {
-
-    private final UserRepository userRepository;
-
-    private final ValidationService validationService;
-
-    private final UserMapper userMapper;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private ValidationService validationService;
+    private UserMapper userMapper;
 
     public static final String VIENNA = "Vienna";
     public static final String FRANKFURT = "Frankfurt";
@@ -26,12 +30,6 @@ public class CalculationService {
 
     //take train before 9.30am & 4-7:30pm => rushHour = full price
     boolean rushHour;
-
-    public CalculationService(UserRepository userRepository, ValidationService validationService, UserMapper userMapper) {
-        this.userRepository = userRepository;
-        this.validationService = validationService;
-        this.userMapper = userMapper;
-    }
 
     //'over 60s rail card' => 34% discount
     //with child under 16 years old and 'family card'=> 50% discount on every ticket
