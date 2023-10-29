@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -31,8 +32,8 @@ public class TicketController {
     }
 
     @GetMapping("/tickets/price")
-    public ResponseEntity<Double> calculateTicket(@RequestBody List<TicketDTO> tickets) throws Exception {
-        Double price = calculationService.calculatePrice(tickets);
+    public ResponseEntity<BigDecimal> calculateTicket(@RequestBody List<TicketDTO> tickets) throws Exception {
+        BigDecimal price = calculationService.calculatePrice(tickets);
         return ResponseEntity.ok().body(price);
     }
 
@@ -62,8 +63,7 @@ public class TicketController {
 
     @PutMapping("/book/tickets/{userId}")
     public List<TicketDTO>  createTicket(List<TicketDTO> tickets, @RequestParam Long userId) throws Exception{
-        List<TicketDTO> bookedTickets = ticketService.bookTickets(tickets,userId);
-        return bookedTickets;
+        return ticketService.bookTickets(tickets,userId);
     }
 
 }

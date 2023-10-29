@@ -11,7 +11,6 @@ import com.example.RailwayTicketingPortal.service.mapper.TicketMapper;
 
 import com.example.RailwayTicketingPortal.service.mapper.UserMapper;
 import lombok.AllArgsConstructor;
-import org.mapstruct.control.MappingControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +33,7 @@ public class TicketService {
     private final ValidationService validationService;
 
     private final UserRepository userRepository;
+
     private final UserMapper userMapper;
 
     public TicketDTO create(TicketDTO ticketDTO) {
@@ -85,12 +85,15 @@ public class TicketService {
 
     public List<TicketDTO> bookTickets(List<TicketDTO> tickets, Long userId) throws Exception{
         validationService.validateUser(userId);
+
         Optional<User> optionalUser = userRepository.findById(userId);
         UserDTO userDTO = new UserDTO();
         if(optionalUser.isPresent()){
             userDTO = userMapper.toDTO(optionalUser.get());
         }
         for (TicketDTO ticketDTO: tickets) {
+            validationService.validateTicket(ticketDTO);
+
             ticketDTO.setUserId(userId);
             userDTO.getTickets().add(ticketMapper.toEntity(ticketDTO));
             userRepository.save(userMapper.toEntity(userDTO));
