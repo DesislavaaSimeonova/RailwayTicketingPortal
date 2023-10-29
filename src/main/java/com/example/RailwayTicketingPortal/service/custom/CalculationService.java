@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +34,7 @@ public class CalculationService {
 
     //take train before 9.30am & 4-7:30pm => rushHour = full price
     //'over 60s rail card' => 34% discount
-    //with child under 16 years old and 'family card'=> 50% discount on every ticket
+    //with child under 16 years old and 'family card'=> 50% discount on every ticket //TODO: test
     //with child under 16 years old => 10% discount on every ticket
     public BigDecimal calculatePrice(List<TicketDTO> tickets) throws Exception {
         BigDecimal total = BigDecimal.ZERO;
@@ -66,7 +67,7 @@ public class CalculationService {
             basePrice = basePrice.multiply(BigDecimal.valueOf(0.9));
         }
 
-        return basePrice;
+        return formatPrice(basePrice);
     }
 
     private BigDecimal calculatePriceBasedOnHour(BigDecimal basePrice, TicketDTO ticketDTO){
@@ -99,5 +100,11 @@ public class CalculationService {
             ticketPrice = ticketPrice.add(BigDecimal.valueOf(100.00));
         }
         return ticketPrice;
+    }
+
+    private BigDecimal formatPrice(BigDecimal price){
+        DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+        String formattedPrice = decimalFormat.format(price);
+        return new BigDecimal(formattedPrice);
     }
 }
