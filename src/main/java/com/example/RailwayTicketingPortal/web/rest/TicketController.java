@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -24,15 +25,15 @@ public class TicketController {
     private final CalculationService calculationService;
 
     @PostMapping("/ticket")
-    public ResponseEntity<TicketDTO> createTicket(@RequestBody TicketDTO ticketDTO){
+    public ResponseEntity<TicketDTO> createTicket(@RequestBody TicketDTO ticketDTO) {
         TicketDTO createdTicket = ticketService.create(ticketDTO);
 
         return ResponseEntity.ok().body(createdTicket);
     }
 
     @GetMapping("/tickets/price")
-    public ResponseEntity<Double> calculateTicket(@RequestBody List<TicketDTO> tickets) throws Exception {
-        Double price = calculationService.calculatePrice(tickets);
+    public ResponseEntity<BigDecimal> calculateTicket(@RequestBody List<TicketDTO> tickets) throws Exception {
+        BigDecimal price = calculationService.calculatePrice(tickets);
         return ResponseEntity.ok().body(price);
     }
 
@@ -43,10 +44,10 @@ public class TicketController {
 
     @GetMapping("/ticket/search")
     public List<Ticket> getTicketById(@RequestParam(required = false) String startDestination,
-                                      @RequestParam(required = false)String endDestination,
+                                      @RequestParam(required = false) String endDestination,
                                       @RequestParam(required = false) String departureTime) {
         LocalTime convertedTime = ticketService.parseStringToLocalTime(departureTime);
-        return ticketQueryService.getByCriteria(startDestination,endDestination,convertedTime);
+        return ticketQueryService.getByCriteria(startDestination, endDestination, convertedTime);
     }
 
     @GetMapping("/tickets")
@@ -58,6 +59,11 @@ public class TicketController {
     public ResponseEntity<Void> deleteTicket(@RequestParam Long ticketId) {
         ticketService.delete(ticketId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/book/tickets/{userId}")
+    public List<TicketDTO>  createTicket(List<TicketDTO> tickets, @RequestParam Long userId) throws Exception{
+        return ticketService.bookTickets(tickets,userId);
     }
 
 }

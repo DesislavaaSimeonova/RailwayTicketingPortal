@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -34,21 +35,21 @@ public class CalculationService {
     //'over 60s rail card' => 34% discount
     //with child under 16 years old and 'family card'=> 50% discount on every ticket
     //with child under 16 years old => 10% discount on every ticket
-
-    public Double calculatePrice(List<TicketDTO> tickets) throws Exception {
-        Double total = 0.0;
+    public BigDecimal calculatePrice(List<TicketDTO> tickets) throws Exception {
+        BigDecimal total = BigDecimal.ZERO;
         for (TicketDTO ticketDTO : tickets) {
-            Double basePrice = calculatePriceBasedOnDistance(ticketDTO);
+            BigDecimal basePrice = calculatePriceBasedOnDistance(ticketDTO);
             basePrice = calculatePriceBasedOnHour(basePrice, ticketDTO);
-            basePrice = calculatePriceBasedOnYears(basePrice, ticketDTO);
-
-            total += basePrice;
+            if(ticketDTO.getUserId() != null){
+                basePrice = calculatePriceBasedOnYears(basePrice, ticketDTO);
+            }
+            total = total.add(basePrice);
         }
 
         return total;
     }
 
-    private Double calculatePriceBasedOnYears(Double basePrice, TicketDTO ticketDTO) throws Exception {
+    private BigDecimal calculatePriceBasedOnYears(BigDecimal basePrice, TicketDTO ticketDTO) throws Exception {
         validationService.validateUser(ticketDTO.getUserId());
         Optional<User> optionalUser = userRepository.findById(ticketDTO.getUserId());
         UserDTO userDTO = new UserDTO();
@@ -58,44 +59,44 @@ public class CalculationService {
 
         //with child under 16 years old and 'family card'=> 50% discount on every ticket
         if(UNDER_16_YEARS.equals(ticketDTO.getType()) && userDTO.isWithFamilyCard()){
-            basePrice *= 0.5;
+            basePrice = basePrice.multiply(BigDecimal.valueOf(0.5));
 
         //with child under 16 years old => 10% discount on every ticket
         }else if(UNDER_16_YEARS.equals(ticketDTO.getType())){
-            basePrice *= 0.9;
+            basePrice = basePrice.multiply(BigDecimal.valueOf(0.9));
         }
 
         return basePrice;
     }
 
-    private Double calculatePriceBasedOnHour(Double basePrice, TicketDTO ticketDTO){
+    private BigDecimal calculatePriceBasedOnHour(BigDecimal basePrice, TicketDTO ticketDTO){
         LocalTime departureTime = ticketDTO.getDepartureTime();
 
         //9:30-4am & after 7:30pm => 5% discount
         if((departureTime.isAfter(LocalTime.of(9,30)) && departureTime.isBefore(LocalTime.of(16, 0)))
                 || (departureTime.isAfter(LocalTime.of(19,0)) && departureTime.isBefore(LocalTime.of(9,30)))){
-            basePrice *= 0.95;
+            basePrice = basePrice.multiply(BigDecimal.valueOf(0.95));
         }
 
         return basePrice;
     }
 
-    private Double calculatePriceBasedOnDistance(TicketDTO ticketDTO){
-        Double ticketPrice = 0.0;
+    private BigDecimal calculatePriceBasedOnDistance(TicketDTO ticketDTO){
+        BigDecimal ticketPrice = BigDecimal.ZERO;
         String startDestination = ticketDTO.getStartDestination();
         String endDestination = ticketDTO.getEndDestination();
 
         if((VIENNA.equals(startDestination) && FRANKFURT.equals(endDestination)
                 ||(FRANKFURT.equals(startDestination) && VIENNA.equals(endDestination)))){
-            ticketPrice += 50.00;
+            ticketPrice = ticketPrice.add(BigDecimal.valueOf(50.00));
         }
         else if((VIENNA.equals(startDestination) && MUNICH.equals(endDestination)
                 ||(MUNICH.equals(startDestination) && VIENNA.equals(endDestination)))){
-            ticketPrice += 75.00;
+            ticketPrice = ticketPrice.add(BigDecimal.valueOf(75.00));
 
         }else if((FRANKFURT.equals(startDestination) && MUNICH.equals(endDestination)
                 ||(MUNICH.equals(startDestination) && FRANKFURT.equals(endDestination)))){
-            ticketPrice += 100.00;
+            ticketPrice = ticketPrice.add(BigDecimal.valueOf(100.00));
         }
         return ticketPrice;
     }

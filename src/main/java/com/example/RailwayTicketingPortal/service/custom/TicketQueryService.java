@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -39,6 +38,6 @@ public class TicketQueryService {
         else if(departureTime != null){
             return ticketRepository.findAllByDepartureTime(departureTime);
         }
-        return new ArrayList<>();
+        return ticketRepository.findAll();
     }
 }
