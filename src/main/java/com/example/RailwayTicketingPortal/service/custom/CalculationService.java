@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -66,7 +67,7 @@ public class CalculationService {
             basePrice = basePrice.multiply(BigDecimal.valueOf(0.9));
         }
 
-        return basePrice;
+        return formatPrice(basePrice);
     }
 
     private BigDecimal calculatePriceBasedOnHour(BigDecimal basePrice, TicketDTO ticketDTO){
@@ -99,5 +100,11 @@ public class CalculationService {
             ticketPrice = ticketPrice.add(BigDecimal.valueOf(100.00));
         }
         return ticketPrice;
+    }
+
+    private BigDecimal formatPrice(BigDecimal price){
+        DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+        String formattedPrice = decimalFormat.format(price);
+        return new BigDecimal(formattedPrice);
     }
 }

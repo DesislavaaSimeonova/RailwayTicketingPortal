@@ -16,7 +16,6 @@
 
             <!--TABLE FIELDS-->
             <column name="type" type="varchar(255)"/>
-            <column name="password" type="varchar(255)"/>
             <column name="departure_time" type="timestamp"/>
             <column name="start_destination" type="varchar(255)"/>
             <column name="end_destination" type="varchar(255)"/>
@@ -41,7 +40,7 @@
     <changeSet id="added_fk_user_to_thicket_table" author="dsimeonova">
         <addForeignKeyConstraint baseTableName="ticket" baseColumnNames="user_id"
                                  constraintName="fk_user_to_ticket"
-                                 referencedTableName="user" referencedColumnNames="id"/>
+                                 referencedTableName="users" referencedColumnNames="id"/>
     </changeSet>
     <!-- END HERE -->
 </databaseChangeLog>
