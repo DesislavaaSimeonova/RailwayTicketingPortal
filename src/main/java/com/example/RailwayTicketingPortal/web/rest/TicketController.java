@@ -27,7 +27,6 @@ public class TicketController {
     @PostMapping("/ticket")
     public ResponseEntity<TicketDTO> createTicket(@RequestBody TicketDTO ticketDTO) {
         TicketDTO createdTicket = ticketService.create(ticketDTO);
-
         return ResponseEntity.ok().body(createdTicket);
     }
 
@@ -62,7 +61,8 @@ public class TicketController {
     }
 
     @PutMapping("/book/tickets/{userId}")
-    public List<TicketDTO>  createTicket(List<TicketDTO> tickets, @RequestParam Long userId) throws Exception{
+    public List<TicketDTO>  bookTicket(@RequestBody List<TicketDTO> tickets,
+                                       @PathVariable Long userId) throws Exception{
         return ticketService.bookTickets(tickets,userId);
     }
 

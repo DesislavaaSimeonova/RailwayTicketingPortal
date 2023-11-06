@@ -34,7 +34,7 @@ public class CalculationService {
 
     //take train before 9.30am & 4-7:30pm => rushHour = full price
     //'over 60s rail card' => 34% discount
-    //with child under 16 years old and 'family card'=> 50% discount on every ticket //TODO: test
+    //with child under 16 years old and 'family card'=> 50% discount on every ticket
     //with child under 16 years old => 10% discount on every ticket
     public BigDecimal calculatePrice(List<TicketDTO> tickets) throws Exception {
         BigDecimal total = BigDecimal.ZERO;
