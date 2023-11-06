@@ -32,5 +32,5 @@ public class UserDTO {
 
     private boolean withOver60sRailwayCard;
 
-    private boolean withChildUnder16;
+    private boolean withChildUnder16Years;
 }

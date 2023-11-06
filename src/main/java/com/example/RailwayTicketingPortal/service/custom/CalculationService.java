@@ -51,7 +51,7 @@ public class CalculationService {
             userDTO = userMapper.toDTO(optionalUser.get());
         }
 
-        boolean isWithUnder16YearsOld = userDTO.isWithChildUnder16();
+        boolean isWithUnder16YearsOld = userDTO.isWithChildUnder16Years();
         boolean isWithFamilyCard = userDTO.isWithFamilyCard();
 
         if(isWithUnder16YearsOld && isWithFamilyCard){

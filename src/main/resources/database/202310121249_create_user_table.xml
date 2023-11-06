@@ -22,7 +22,7 @@
             <column name="years" type="bigint"/>
             <column name="with_family_card" type="boolean"/>
             <column name="with_over_60s_railway_card" type="boolean"/>
-            <column name="with_child_under_16" type="boolean"/>
+            <column name="with_child_under_16_years" type="boolean"/>
             <!-- END HERE -->
         </createTable>
     </changeSet>

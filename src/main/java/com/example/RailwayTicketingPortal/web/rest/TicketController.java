@@ -5,7 +5,6 @@ import com.example.RailwayTicketingPortal.service.TicketService;
 import com.example.RailwayTicketingPortal.service.custom.CalculationService;
 import com.example.RailwayTicketingPortal.service.custom.TicketQueryService;
 import com.example.RailwayTicketingPortal.service.dto.TicketDTO;
-import com.example.RailwayTicketingPortal.service.dto.UserDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +30,9 @@ public class TicketController {
         return ResponseEntity.ok().body(createdTicket);
     }
 
-    @PutMapping("/user/{userId}")
+    @PutMapping("/ticket/{ticketId}")
     public ResponseEntity<TicketDTO> updateTicket(@RequestBody TicketDTO ticketDTO,
-                                                  @RequestParam Long ticketId) {
+                                                  @PathVariable Long ticketId) {
         TicketDTO updatedTicket = ticketService.update(ticketDTO,ticketId);
         return ResponseEntity.ok().body(updatedTicket);
     }
@@ -45,7 +44,7 @@ public class TicketController {
     }
 
     @GetMapping("/ticket/{ticketId}")
-    public Ticket getTicketById(@RequestParam Long ticketId) {
+    public Ticket getTicketById(@PathVariable Long ticketId) {
         return ticketService.getById(ticketId);
     }
 
@@ -63,7 +62,7 @@ public class TicketController {
     }
 
     @DeleteMapping("/ticket/{ticketId}")
-    public ResponseEntity<Void> deleteTicket(@RequestParam Long ticketId) {
+    public ResponseEntity<Void> deleteTicket(@PathVariable Long ticketId) {
         ticketService.delete(ticketId);
         return ResponseEntity.noContent().build();
     }

@@ -110,7 +110,7 @@ class CalculationServiceTest {
         BigDecimal expectedPriceWithDiscount = BigDecimal.valueOf(64.12);
 
         UserDTO userDTO = new UserDTO();
-        userDTO.setWithChildUnder16(Boolean.TRUE);
+        userDTO.setWithChildUnder16Years(Boolean.TRUE);
 
         //when
         Mockito.when(userRepository.findById(USER_ID)).thenReturn(Optional.of(new User()));
@@ -183,7 +183,7 @@ class CalculationServiceTest {
 
         UserDTO userDTO = new UserDTO();
         userDTO.setWithFamilyCard(Boolean.TRUE);
-        userDTO.setWithChildUnder16(Boolean.TRUE);
+        userDTO.setWithChildUnder16Years(Boolean.TRUE);
 
         //when
         Mockito.when(userRepository.findById(USER_ID)).thenReturn(Optional.of(new User()));
