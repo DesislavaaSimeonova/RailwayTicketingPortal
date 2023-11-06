@@ -48,9 +48,9 @@ public class TicketService {
         throw new HttpServerErrorException(HttpStatus.EXPECTATION_FAILED);
     }
 
-    public TicketDTO update(TicketDTO ticketDTO, Long id) {
-        if(ticketDTO != null && id != null){
-            Ticket currentticket =getById(id);
+    public TicketDTO update(TicketDTO ticketDTO, Long ticketId) {
+        if(ticketDTO != null && ticketId != null){
+            Ticket currentticket =getById(ticketId);
 
             Ticket ticket = ticketMapper.toEntity(ticketDTO);
             ticket.setId(currentticket.getId());

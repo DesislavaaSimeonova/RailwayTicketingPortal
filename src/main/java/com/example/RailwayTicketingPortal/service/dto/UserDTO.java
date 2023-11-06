@@ -26,7 +26,11 @@ public class UserDTO {
 
     private Long years;
 
+    List<Ticket> tickets;
+
     private boolean withFamilyCard;
 
-    List<Ticket> tickets;
+    private boolean withOver60sRailwayCard;
+
+    private boolean withChildUnder16;
 }

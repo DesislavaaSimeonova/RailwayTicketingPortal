@@ -5,6 +5,7 @@ import com.example.RailwayTicketingPortal.service.TicketService;
 import com.example.RailwayTicketingPortal.service.custom.CalculationService;
 import com.example.RailwayTicketingPortal.service.custom.TicketQueryService;
 import com.example.RailwayTicketingPortal.service.dto.TicketDTO;
+import com.example.RailwayTicketingPortal.service.dto.UserDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,13 @@ public class TicketController {
     public ResponseEntity<TicketDTO> createTicket(@RequestBody TicketDTO ticketDTO) {
         TicketDTO createdTicket = ticketService.create(ticketDTO);
         return ResponseEntity.ok().body(createdTicket);
+    }
+
+    @PutMapping("/user/{userId}")
+    public ResponseEntity<TicketDTO> updateTicket(@RequestBody TicketDTO ticketDTO,
+                                                  @RequestParam Long ticketId) {
+        TicketDTO updatedTicket = ticketService.update(ticketDTO,ticketId);
+        return ResponseEntity.ok().body(updatedTicket);
     }
 
     @GetMapping("/tickets/price")
@@ -65,5 +73,4 @@ public class TicketController {
                                        @PathVariable Long userId) throws Exception{
         return ticketService.bookTickets(tickets,userId);
     }
-
 }
