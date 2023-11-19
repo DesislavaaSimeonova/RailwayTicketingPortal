@@ -30,6 +30,13 @@ public class TicketController {
         return ResponseEntity.ok().body(createdTicket);
     }
 
+    @PutMapping("/ticket/{ticketId}")
+    public ResponseEntity<TicketDTO> updateTicket(@RequestBody TicketDTO ticketDTO,
+                                                  @PathVariable Long ticketId) {
+        TicketDTO updatedTicket = ticketService.update(ticketDTO,ticketId);
+        return ResponseEntity.ok().body(updatedTicket);
+    }
+
     @GetMapping("/tickets/price")
     public ResponseEntity<BigDecimal> calculateTicket(@RequestBody List<TicketDTO> tickets) throws Exception {
         BigDecimal price = calculationService.calculatePrice(tickets);
@@ -37,7 +44,7 @@ public class TicketController {
     }
 
     @GetMapping("/ticket/{ticketId}")
-    public Ticket getTicketById(@RequestParam Long ticketId) {
+    public Ticket getTicketById(@PathVariable Long ticketId) {
         return ticketService.getById(ticketId);
     }
 
@@ -55,7 +62,7 @@ public class TicketController {
     }
 
     @DeleteMapping("/ticket/{ticketId}")
-    public ResponseEntity<Void> deleteTicket(@RequestParam Long ticketId) {
+    public ResponseEntity<Void> deleteTicket(@PathVariable Long ticketId) {
         ticketService.delete(ticketId);
         return ResponseEntity.noContent().build();
     }
@@ -65,5 +72,4 @@ public class TicketController {
                                        @PathVariable Long userId) throws Exception{
         return ticketService.bookTickets(tickets,userId);
     }
-
 }

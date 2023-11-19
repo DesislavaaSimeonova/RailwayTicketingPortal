@@ -38,4 +38,13 @@ public class User {
     @OneToMany(mappedBy = "userId")
     List<Ticket> tickets;
 
+    @Column(name = "with_family_card")
+    private boolean withFamilyCard;
+
+    @Column(name = "with_over_60s_railway_card")
+    private boolean withOver60sRailwayCard;
+
+    @Column(name = "with_child_under_16_years")
+    private boolean withChildUnder16Years;
+
 }

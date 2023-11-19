@@ -48,15 +48,15 @@ public class TicketService {
         throw new HttpServerErrorException(HttpStatus.EXPECTATION_FAILED);
     }
 
-    public TicketDTO update(TicketDTO ticketDTO, Long id) {
-        if(ticketDTO != null && id != null){
-            Ticket currentticket =getById(id);
+    public TicketDTO update(TicketDTO ticketDTO, Long ticketId) {
+        if(ticketDTO != null && ticketId != null){
+            Ticket currentTicket =getById(ticketId);
 
             Ticket ticket = ticketMapper.toEntity(ticketDTO);
-            ticket.setId(currentticket.getId());
+            ticket.setId(currentTicket.getId());
 
-            Ticket updatedticket = ticketRepository.save(ticket);
-            return ticketMapper.toDTO(updatedticket);
+            Ticket updatedTicket = ticketRepository.save(ticket);
+            return ticketMapper.toDTO(updatedTicket);
         }
         throw new HttpServerErrorException(HttpStatus.NOT_MODIFIED);
     }
@@ -68,6 +68,7 @@ public class TicketService {
         }
         throw new HttpServerErrorException(HttpStatus.NO_CONTENT);
     }
+
     public List<Ticket> getAll() {
         List<Ticket> tickets = ticketRepository.findAll();
         return tickets;
@@ -80,6 +81,9 @@ public class TicketService {
         else throw new HttpServerErrorException(HttpStatus.EXPECTATION_FAILED);
     }
     public LocalTime parseStringToLocalTime(String departureTime){
+        if(departureTime == null){
+            return null;
+        }
         return LocalTime.parse(departureTime);
     }
 

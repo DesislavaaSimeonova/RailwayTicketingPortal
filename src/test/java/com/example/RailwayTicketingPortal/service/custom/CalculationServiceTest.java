@@ -103,21 +103,96 @@ class CalculationServiceTest {
     }
 
     @Test
-    void whenCalculatePriceBasedOnDistance_PriceInNonRushHourAndTypeUnder16_shouldSucceed() throws Exception {
+    void whenCalculatePriceBasedOnDistance_PriceInNonRushHourAndWithUnder16_shouldSucceed() throws Exception {
         //given
         TicketDTO ticketDTO = createTicketPrice();
         ticketDTO.setDepartureTime(LocalTime.of(10,10));
-        ticketDTO.setType(UNDER_16_YEARS);
         BigDecimal expectedPriceWithDiscount = BigDecimal.valueOf(64.12);
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setWithChildUnder16Years(Boolean.TRUE);
 
         //when
         Mockito.when(userRepository.findById(USER_ID)).thenReturn(Optional.of(new User()));
-        Mockito.when(userMapper.toDTO(Mockito.any(User.class))).thenReturn(new UserDTO());
+        Mockito.when(userMapper.toDTO(Mockito.any(User.class))).thenReturn(userDTO);
         BigDecimal calculatedPrice = calculationService.calculatePrice(List.of(ticketDTO));
 
         Mockito.verify(validationService).validateUser(USER_ID);
         Mockito.verify(userRepository).findById(USER_ID);
         Mockito.verify(userMapper).toDTO(Mockito.any(User.class));
+
+        //then
+        assertEquals(expectedPriceWithDiscount, calculatedPrice);
+    }
+
+    @Test
+    void whenCalculatePriceBasedOnDistance_PriceInNonRushHourAndUserOver60s_shouldSucceed() throws Exception {
+        //given
+        TicketDTO ticketDTO = createTicketPrice();
+        ticketDTO.setDepartureTime(LocalTime.of(10,10));
+        BigDecimal expectedPriceWithDiscount = BigDecimal.valueOf(47.02);
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setWithOver60sRailwayCard(Boolean.TRUE);
+
+        //when
+        Mockito.when(userRepository.findById(USER_ID)).thenReturn(Optional.of(new User()));
+        Mockito.when(userMapper.toDTO(Mockito.any(User.class))).thenReturn(userDTO);
+        BigDecimal calculatedPrice = calculationService.calculatePrice(List.of(ticketDTO));
+
+        Mockito.verify(validationService).validateUser(USER_ID);
+        Mockito.verify(userRepository).findById(USER_ID);
+        Mockito.verify(userMapper).toDTO(Mockito.any(User.class));
+
+        //then
+        assertEquals(expectedPriceWithDiscount, calculatedPrice);
+    }
+
+    @Test
+    void whenCalculatePriceBasedOnDistance_PriceInNonRushHourAndUserOnlyWithFamilyCard_shouldSucceed() throws Exception {
+        //given
+        TicketDTO ticketDTO = createTicketPrice();
+        ticketDTO.setDepartureTime(LocalTime.of(10,10));
+        BigDecimal expectedPriceWithDiscount = BigDecimal.valueOf(71.25);
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setWithFamilyCard(Boolean.TRUE);
+
+        //when
+        Mockito.when(userRepository.findById(USER_ID)).thenReturn(Optional.of(new User()));
+        Mockito.when(userMapper.toDTO(Mockito.any(User.class))).thenReturn(userDTO);
+        BigDecimal calculatedPrice = calculationService.calculatePrice(List.of(ticketDTO));
+
+        Mockito.verify(validationService).validateUser(USER_ID);
+        Mockito.verify(userRepository).findById(USER_ID);
+        Mockito.verify(userMapper).toDTO(Mockito.any(User.class));
+
+        //then
+        assertEquals(expectedPriceWithDiscount, calculatedPrice);
+    }
+    @Test
+    void whenCalculatePriceBasedOnDistance_PriceInNonRushHourAndUserUnder16AndWithFamilyCard_shouldSucceed() throws Exception {
+        //given
+        TicketDTO ticketDTOChild = createTicketPrice();
+        ticketDTOChild.setDepartureTime(LocalTime.of(10,10));
+
+        TicketDTO ticketDTOParent = createTicketPrice();
+        ticketDTOParent.setDepartureTime(LocalTime.of(10,10));
+
+        BigDecimal expectedPriceWithDiscount = BigDecimal.valueOf(71.24);
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setWithFamilyCard(Boolean.TRUE);
+        userDTO.setWithChildUnder16Years(Boolean.TRUE);
+
+        //when
+        Mockito.when(userRepository.findById(USER_ID)).thenReturn(Optional.of(new User()));
+        Mockito.when(userMapper.toDTO(Mockito.any(User.class))).thenReturn(userDTO);
+        BigDecimal calculatedPrice = calculationService.calculatePrice(List.of(ticketDTOChild,ticketDTOParent));
+
+        Mockito.verify(validationService, Mockito.times(2)).validateUser(USER_ID);
+        Mockito.verify(userRepository, Mockito.times(2)).findById(USER_ID);
+        Mockito.verify(userMapper, Mockito.times(2)).toDTO(Mockito.any(User.class));
 
         //then
         assertEquals(expectedPriceWithDiscount, calculatedPrice);

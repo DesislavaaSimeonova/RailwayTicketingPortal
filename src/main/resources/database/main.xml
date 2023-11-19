@@ -7,6 +7,7 @@
     <!-- CREATE TABLES -->
     <include file = "database/202310121249_create_user_table.xml" relativeToChangelogFile="false"/>
     <include file = "database/202310121904_create_ticket_table.xml" relativeToChangelogFile="false"/>
+    <include file = "database/202311062130_create_reservation_table.xml" relativeToChangelogFile="false"/>
     <!--END HERE-->
 
 </databaseChangeLog>

@@ -16,32 +16,31 @@ public class UserController{
 
     private final UserService userService;
 
-    @PostMapping("/user")
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) throws Exception {
+    @PostMapping("/users")
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
         UserDTO createdUser = userService.create(userDTO);
         return ResponseEntity.ok().body(createdUser);
     }
 
-    @PutMapping("/user/{userId}")
-    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO playerDTO,
-                                              @RequestParam Long userId) {
-        UserDTO updatedUser = userService.update(playerDTO,userId);
+    @PutMapping("/edit/users/{userId}")
+    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO,
+                                              @PathVariable Long userId) {
+        UserDTO updatedUser = userService.update(userDTO,userId);
         return ResponseEntity.ok().body(updatedUser);
     }
 
-
     @GetMapping("/user/{userId}")
-    public User getPlayerById(@RequestParam Long userId) {
+    public User getUserById(@PathVariable Long userId) {
         return userService.getById(userId);
     }
 
-    @GetMapping("/users")
+    @GetMapping("/view/users")
     public List<User> getAllUsers() {
         return userService.getAll();
     }
 
     @DeleteMapping("/user/{userId}")
-    public ResponseEntity<Void> deleteUser(@RequestParam Long userId) {
+    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
         userService.delete(userId);
         return ResponseEntity.noContent().build();
     }

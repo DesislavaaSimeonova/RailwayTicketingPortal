@@ -29,13 +29,7 @@ public class CalculationService {
     public static final String VIENNA = "Vienna";
     public static final String FRANKFURT = "Frankfurt";
     public static final String MUNICH = "Munich";
-    public static final String UNDER_16_YEARS = "under 16 years";
 
-
-    //take train before 9.30am & 4-7:30pm => rushHour = full price
-    //'over 60s rail card' => 34% discount
-    //with child under 16 years old and 'family card'=> 50% discount on every ticket
-    //with child under 16 years old => 10% discount on every ticket
     public BigDecimal calculatePrice(List<TicketDTO> tickets) throws Exception {
         BigDecimal total = BigDecimal.ZERO;
         for (TicketDTO ticketDTO : tickets) {
@@ -46,7 +40,6 @@ public class CalculationService {
             }
             total = total.add(basePrice);
         }
-
         return total;
     }
 
@@ -58,13 +51,19 @@ public class CalculationService {
             userDTO = userMapper.toDTO(optionalUser.get());
         }
 
-        //with child under 16 years old and 'family card'=> 50% discount on every ticket
-        if(UNDER_16_YEARS.equals(ticketDTO.getType()) && userDTO.isWithFamilyCard()){
+        boolean isWithUnder16YearsOld = userDTO.isWithChildUnder16Years();
+        boolean isWithFamilyCard = userDTO.isWithFamilyCard();
+
+        if(isWithUnder16YearsOld && isWithFamilyCard){
             basePrice = basePrice.multiply(BigDecimal.valueOf(0.5));
 
-        //with child under 16 years old => 10% discount on every ticket
-        }else if(UNDER_16_YEARS.equals(ticketDTO.getType())){
+        }else if(isWithUnder16YearsOld){
             basePrice = basePrice.multiply(BigDecimal.valueOf(0.9));
+        }
+
+        boolean isWithOver60sCard = userDTO.isWithOver60sRailwayCard();
+        if (isWithOver60sCard){
+            basePrice = basePrice.multiply(BigDecimal.valueOf(0.66));
         }
 
         return formatPrice(basePrice);
@@ -73,12 +72,12 @@ public class CalculationService {
     private BigDecimal calculatePriceBasedOnHour(BigDecimal basePrice, TicketDTO ticketDTO){
         LocalTime departureTime = ticketDTO.getDepartureTime();
 
-        //9:30-4am & after 7:30pm => 5% discount
-        if((departureTime.isAfter(LocalTime.of(9,30)) && departureTime.isBefore(LocalTime.of(16, 0)))
-                || (departureTime.isAfter(LocalTime.of(19,0)) && departureTime.isBefore(LocalTime.of(9,30)))){
+        boolean isNotInMorningRushHour = (departureTime.isAfter(LocalTime.of(9,30)) && departureTime.isBefore(LocalTime.of(16, 0)));
+        boolean isNotInEveningRushHour =  (departureTime.isAfter(LocalTime.of(19,30)) && departureTime.isBefore(LocalTime.of(9,30)));
+
+        if(isNotInMorningRushHour || isNotInEveningRushHour){
             basePrice = basePrice.multiply(BigDecimal.valueOf(0.95));
         }
-
         return basePrice;
     }
 
@@ -87,16 +86,20 @@ public class CalculationService {
         String startDestination = ticketDTO.getStartDestination();
         String endDestination = ticketDTO.getEndDestination();
 
-        if((VIENNA.equals(startDestination) && FRANKFURT.equals(endDestination)
-                ||(FRANKFURT.equals(startDestination) && VIENNA.equals(endDestination)))){
+        boolean isDestinationFromViennaToFrankfurt = (VIENNA.equals(startDestination) && FRANKFURT.equals(endDestination));
+        boolean isDestinationFromFrankfurtToVienna = (FRANKFURT.equals(startDestination) && VIENNA.equals(endDestination));
+        boolean isDestinationFromViennaToMunich = (VIENNA.equals(startDestination) && MUNICH.equals(endDestination));
+        boolean isDestinationFromMunichToVienna = (MUNICH.equals(startDestination) && VIENNA.equals(endDestination));
+        boolean isDestinationFromFrankfurtToMunich = (FRANKFURT.equals(startDestination) && MUNICH.equals(endDestination));
+        boolean isDestinationFromMunichToFrankfurt = (MUNICH.equals(startDestination) && FRANKFURT.equals(endDestination));
+
+        if(isDestinationFromViennaToFrankfurt || isDestinationFromFrankfurtToVienna) {
             ticketPrice = ticketPrice.add(BigDecimal.valueOf(50.00));
         }
-        else if((VIENNA.equals(startDestination) && MUNICH.equals(endDestination)
-                ||(MUNICH.equals(startDestination) && VIENNA.equals(endDestination)))){
+        else if(isDestinationFromViennaToMunich || isDestinationFromMunichToVienna){
             ticketPrice = ticketPrice.add(BigDecimal.valueOf(75.00));
 
-        }else if((FRANKFURT.equals(startDestination) && MUNICH.equals(endDestination)
-                ||(MUNICH.equals(startDestination) && FRANKFURT.equals(endDestination)))){
+        }else if(isDestinationFromFrankfurtToMunich ||isDestinationFromMunichToFrankfurt){
             ticketPrice = ticketPrice.add(BigDecimal.valueOf(100.00));
         }
         return ticketPrice;
